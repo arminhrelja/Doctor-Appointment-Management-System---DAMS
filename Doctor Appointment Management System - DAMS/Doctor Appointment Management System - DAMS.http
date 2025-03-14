@@ -1,0 +1,6 @@
+@Doctor_Appointment_Management_System___DAMS_HostAddress = http://localhost:5102
+
+GET {{Doctor_Appointment_Management_System___DAMS_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
