@@ -1,8 +1,16 @@
 import './App.css'
+import Header from './components/Header'
+import Hero from './components/Hero'
+import CategorySearch from './components/CategorySearch'
 
 function App() {
   return (
-    <div className=''>Hello World</div>
+    <>
+      <Header />
+      <Hero />
+      <CategorySearch />
+    </>
+    
   )
 }
 
