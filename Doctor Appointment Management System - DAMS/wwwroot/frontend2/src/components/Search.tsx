@@ -7,7 +7,7 @@ function Search() {
 
           <a className="group relative inline-block text-lg font-medium text-white focus:ring-3 focus:outline-hidden" href="#">
               <span className="absolute inset-0 border border-blue-700 rounded-2xl"></span>
-              <span className="block border bg-blue-700 bg-blue-700 rounded-2xl px-12 py-3 transition-transform group-hover:-translate-x-1 group-hover:-translate-y-1">
+              <span className="block border bg-blue-700 rounded-2xl px-12 py-3 transition-transform group-hover:-translate-x-1 group-hover:-translate-y-1">
                 Search
               </span>
           </a>
