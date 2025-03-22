@@ -1,21 +1,17 @@
-import './App.css'
-import CategorySearch from './components/CategorySearch'
-import Header from './components/Header'
-import Hero from './components/Hero'
-import DepartmentIcons from './components/DepartmentIcons'
-import Footer from './components/Footer'
+import { useLocation } from 'react-router-dom';
+import AppRouter from "./pages/AppRouter";
+import Header from './components/Header';
 
 function App() {
+  const location = useLocation();
+  const hideHeader = location.pathname === '/login' || location.pathname === '/register';
 
   return (
-    <>
-      <Header />
-      <Hero />
-      <CategorySearch />
-      <DepartmentIcons />
-      <Footer />
-    </>
-  )
+    <div>
+      {!hideHeader && <header>{<Header/>}</header>}
+      <AppRouter />
+    </div>
+  );
 }
 
-export default App
+export default App;
