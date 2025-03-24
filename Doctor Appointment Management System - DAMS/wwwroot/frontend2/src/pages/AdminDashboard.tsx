@@ -1,23 +1,14 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import Header from '../components/Header';
-import { Home, Calendar, UserPlus, Users, User, ClipboardList, UserCheck } from 'lucide-react';
+import { User, ClipboardList, UserCheck } from 'lucide-react';
+import AdminSidebar from '@/components/AdminSidebar';
 
 const AdminDashboard: React.FC = () => {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <div className="flex flex-1">
-        <aside className="w-64 bg-gray-100 p-4">
-          <nav>
-            <ul className="space-y-8 text-2xl">
-              <li><Link to="/admin/dashboard" className="text-gray-700 flex items-center"><Home className="mr-2" size={24} />Dashboard</Link></li>
-              <li><Link to="/admin/appointments" className="text-gray-700 flex items-center"><Calendar className="mr-2" size={24} />Appointments</Link></li>
-              <li><Link to="/admin/add-doctor" className="text-gray-700 flex items-center"><UserPlus className="mr-2" size={24} />Add Doctor</Link></li>
-              <li><Link to="/admin/doctors-list" className="text-gray-700 flex items-center"><Users className="mr-2" size={24} />Doctors List</Link></li>
-            </ul>
-          </nav>
-        </aside>
+        <AdminSidebar />
         <main className="flex-1 p-6">
           <div className="flex justify-between items-center mb-6">
             <h1 className="text-2xl font-bold">Dashboard</h1>
