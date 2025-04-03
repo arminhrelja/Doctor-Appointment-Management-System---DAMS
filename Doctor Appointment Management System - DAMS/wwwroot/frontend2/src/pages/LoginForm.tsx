@@ -1,71 +1,62 @@
 import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const loginSchema = z.object({
-  email: z.string().email("Invalid email address"),
-  password: z.string().min(8, "Password must be at least 8 characters"),
-});
-
-type LoginFormData = z.infer<typeof loginSchema>;
-
 function LoginForm() {
-  const { register, handleSubmit, formState: { errors } } = useForm<LoginFormData>({
-    resolver: zodResolver(loginSchema),
-  });
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [role, setRole] = useState("Patient");
+    const navigate = useNavigate();
 
-  const [role, setRole] = useState("patient"); // Default role: Pacijent
+    const handleLogin = async () => {
+        const response = await fetch("https://localhost:7036/api/Auth/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password }),
+        });
 
-  const onSubmit = (data: LoginFormData) => {
-    console.log("Login data:", { ...data, role });
-  };
+        const data = await response.json();
+
+        if (response.ok) {
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("role", data.role);
+
+            if (data.role === "Admin") {
+                navigate("/admin/dashboard");
+            } else {
+                navigate("/");
+            }
+        } else {
+            alert("Invalid login credentials!");
+        }
+    };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <Card className="w-full max-w-md p-8 bg-white shadow-lg rounded-lg">
-        <CardHeader>
-          <CardTitle className="text-center text-2xl text-blue-700 font-bold">Sign in to your Account</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5">
-            <div>
-              <Input type="email" placeholder="Email" {...register("email")} />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
-            </div>
-            <div>
-              <Input type="password" placeholder="Password" {...register("password")} />
-              {errors.password && <p className="text-red-500 text-sm">{errors.password.message}</p>}
-            </div>
-            {/* Dropdown za izbor uloge */}
-            <div>
-              <label className="text-gray-700 text-sm font-medium">Login as:</label>
-              <Select onValueChange={setRole} defaultValue="patient">
-                <SelectTrigger className="w-full mt-1 border rounded-lg">
-                  <SelectValue placeholder="Select Role" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="patient">Patient</SelectItem>
-                  <SelectItem value="doctor">Doctor</SelectItem>
-                  <SelectItem value="admin">Administrator</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            <Button type="submit" className="w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800 transition">
-              Login
-            </Button>
-          </form>
-          <p className="text-center text-gray-600 mt-4">Don't have an account? 
-            <Link to="/register" className="text-blue-700 hover:underline"> Sign up</Link>
-          </p>
-        </CardContent>
-      </Card>
-    </div>
+      <div className="flex justify-center items-center min-h-screen bg-gray-100">
+          <Card className="w-full max-w-md shadow-lg bg-white p-6">
+              <CardHeader>
+                  <CardTitle className="text-center text-xl">Login</CardTitle>
+              </CardHeader>
+              <CardContent>
+                  <Select onValueChange={setRole} value={role}>
+                      <SelectTrigger>
+                          <SelectValue placeholder="Select Role" />
+                      </SelectTrigger>
+                      <SelectContent>
+                          <SelectItem value="Patient">Patient</SelectItem>
+                          <SelectItem value="Doctor">Doctor</SelectItem>
+                          <SelectItem value="Admin">Admin</SelectItem>
+                      </SelectContent>
+                  </Select>
+                  <Input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+                  <Input type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+                  <Button className="bg-blue-700 text-white w-full mt-4" onClick={handleLogin}>Login</Button>
+              </CardContent>
+          </Card>
+      </div>
   );
 }
 
