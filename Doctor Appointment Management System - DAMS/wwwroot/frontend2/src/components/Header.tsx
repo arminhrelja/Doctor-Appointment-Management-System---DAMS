@@ -1,8 +1,15 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 
 function Header() {
     const location = useLocation();
+    const navigate = useNavigate();
     const isAdmin = location.pathname.startsWith('/admin');
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("role");
+        navigate("/");
+    };
 
     return (
         <div>
@@ -68,7 +75,7 @@ function Header() {
                                     </>
                                 )}
                                 {isAdmin && (
-                                    <button className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm">
+                                    <button className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm" onClick={handleLogout}>
                                         Logout
                                     </button>
                                 )}
