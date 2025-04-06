@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../components/Header';
+import Header from '../../components/Header';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import AdminSidebar from '@/components/AdminSidebar';
@@ -50,7 +50,7 @@ const AddDoctor: React.FC = () => {
 
             if (!response.ok) {
                 const errorText = await response.text();
-                throw new Error(errorText || "Neuspješno dodavanje doktora.");
+                throw new Error(errorText || "Neuspjeï¿½no dodavanje doktora.");
             }
 
             toast.success("Doctor added successfully!");

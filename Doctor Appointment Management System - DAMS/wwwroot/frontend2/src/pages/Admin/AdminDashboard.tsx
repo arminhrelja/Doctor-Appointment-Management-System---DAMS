@@ -1,5 +1,5 @@
 import React from 'react';
-import Header from '../components/Header';
+import Header from '../../components/Header';
 import { User, ClipboardList, UserCheck } from 'lucide-react';
 import AdminSidebar from '@/components/AdminSidebar';
 
