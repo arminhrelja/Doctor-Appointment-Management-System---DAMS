@@ -1,9 +1,11 @@
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Header() {
-    const location = useLocation();
     const navigate = useNavigate();
-    const isAdmin = location.pathname.startsWith('/admin');
+    const token = localStorage.getItem("token");
+
+    const isLoggedIn = !!token;
+
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -62,7 +64,7 @@ function Header() {
 
                         <div className="flex items-center gap-4">
                             <div className="sm:flex sm:gap-4">
-                                {!isAdmin && (
+                                {!isLoggedIn && (
                                     <>
                                         <Link className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm" to="/login">
                                             Login
@@ -74,8 +76,8 @@ function Header() {
                                         </div>
                                     </>
                                 )}
-                                {isAdmin && (
-                                    <button className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm" onClick={handleLogout}>
+                                {isLoggedIn && (
+                                    <button className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm cursor-pointer" onClick={handleLogout}>
                                         Logout
                                     </button>
                                 )}

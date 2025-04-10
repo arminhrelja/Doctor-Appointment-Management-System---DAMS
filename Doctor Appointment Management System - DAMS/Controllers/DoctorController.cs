@@ -65,6 +65,66 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(doctors);
         }
 
+        [HttpGet("{userId}")]
+        public IActionResult GetDoctor(int userId)
+        {
+            var doctor = _context.Users.FirstOrDefault(d => d.UserId == userId && d.RoleId == 2);
+
+            if (doctor == null)
+            {
+                return NotFound(new { message = "Doctor not found for the given user ID" });
+            }
+
+            var dto = new DoctorDto
+            {
+                UserId = doctor.UserId,
+                FirstName = doctor.FirstName,
+                LastName = doctor.LastName,
+                Speciality = doctor.Speciality ?? "Unknown",
+                About = doctor.About ?? "No description available.",
+                Experience = doctor.Experience ?? 0,
+                Fee = doctor.Fee ?? 0
+            };
+
+            return Ok(dto);
+        }
+
+
+
+        [HttpPut("update/{id}")]
+        public IActionResult UpdateDoctor(int id, [FromBody] UpdateDoctorDTO dto)
+        {
+            var doctor = _context.Users.FirstOrDefault(u => u.UserId == id && u.RoleId == 2);
+            if (doctor == null)
+                return NotFound("Doctor not found.");
+
+            doctor.FirstName = dto.FirstName;
+            doctor.LastName = dto.LastName;
+            doctor.Speciality = dto.Speciality;
+            doctor.Experience = dto.Experience;
+            doctor.Fee = dto.Fee;
+            doctor.About = dto.About;
+
+            _context.SaveChanges();
+            return Ok(new
+            {
+                message = "Doctor updated successfully.",
+                updatedDoctor = new DoctorDto
+                {
+                    UserId = doctor.UserId,
+                    FirstName = doctor.FirstName,
+                    LastName = doctor.LastName,
+                    Speciality = doctor.Speciality ?? "Unknown",
+                    About = doctor.About ?? "No description available.",
+                    Experience = doctor.Experience ?? 0,
+                    Fee = doctor.Fee ?? 0
+                }
+            });
+        }
+
+
+
+
 
     }
 }

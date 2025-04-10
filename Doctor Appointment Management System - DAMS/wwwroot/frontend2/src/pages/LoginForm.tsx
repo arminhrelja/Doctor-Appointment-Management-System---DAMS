@@ -23,12 +23,18 @@ function LoginForm() {
         if (response.ok) {
             localStorage.setItem("token", data.token);
             localStorage.setItem("role", data.role);
+            localStorage.setItem("userId", data.userId);
 
             if (data.role === "Admin") {
                 navigate("/admin/dashboard");
+            } else if (data.role === "Doctor") {
+                navigate("/doctor/dashboard");
+            } else if (data.role === "Patient") {
+                navigate("/patient/dashboard");
             } else {
                 navigate("/");
             }
+
         } else {
             alert("Invalid login credentials!");
         }

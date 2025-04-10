@@ -28,7 +28,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
         {
             var user = _context.Users
                 .FirstOrDefault(u => u.Email == loginRequest.Email && u.Password == loginRequest.Password);
-            
+
             if (user == null)
             {
                 return Unauthorized(new { message = "Invalid email or password" });
@@ -42,7 +42,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             }
 
             var token = GenerateJwtToken(user, role.RoleName);
-            return Ok(new { Token = token, Role = role.RoleName });
+            return Ok(new { Token = token, Role = role.RoleName, UserId = user.UserId });
 
         }
 
