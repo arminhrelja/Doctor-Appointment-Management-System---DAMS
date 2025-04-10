@@ -80,54 +80,148 @@ const DoctorProfile: React.FC = () => {
         }
     };
 
-  return (
-    <div className="flex flex-col min-h-screen">
-      <Header />
-      <div className="flex flex-1">
-        <DoctorSidebar />
-        <main className="flex-1 p-6">
-          <div className="bg-white p-6 rounded-lg shadow-md">
-                      {!doctor ? (
-                          <p>Loading...</p>
-                      ) : !isEditing ? (
-                          <>
-                              <img src="assets/doctor-img.png" alt="Doctor" className="w-32 h-32 rounded-full object-cover mb-4" />"
-                              <h1 className="text-2xl font-bold">{doctor.firstName} {doctor.lastName}</h1>
-                              <p className="text-gray-600">{doctor.speciality}</p>
-                              <p className="text-gray-600">{doctor.experience} Years</p>
-                              <div className="mt-6">
-                                  <h2 className="text-lg font-bold">About:</h2>
-                                  <p className="text-gray-700 mt-2">{doctor.about}</p>
-                              </div>
-                              <div className="mt-6">
-                                  <h2 className="text-lg font-bold">Appointment Fee:</h2>
-                                  <p className="text-gray-700 mt-2">{doctor.fee} BAM</p>
-                                  </div>
-                                  <div className="mt-6">
-                                      <button onClick={() =>
-                                          setIsEditing(true)} className="px-6 py-2 bg-blue-600 
-                                                                        text-white rounded hover:bg-blue-700">
-                                        Edit
-                                      </button>
-                                  </div>
-                          </>
-                      ) : (
-                          <form className="space-y-4" onSubmit={handleUpdate}>
-                              <input className="p-2 border rounded w-full" value={formData.firstName} onChange={(e) => setFormData({ ...formData, firstName: e.target.value })} />
-                              <input className="p-2 border rounded w-full" value={formData.lastName} onChange={(e) => setFormData({ ...formData, lastName: e.target.value })} />
-                              <input className="p-2 border rounded w-full" value={formData.speciality} onChange={(e) => setFormData({ ...formData, speciality: e.target.value })} />
-                              <input type="number" className="p-2 border rounded w-full" value={formData.experience} onChange={(e) => setFormData({ ...formData, experience: e.target.value })} />
-                              <textarea className="p-2 border rounded w-full" value={formData.about} onChange={(e) => setFormData({ ...formData, about: e.target.value })} />
-                              <input type="number" className="p-2 border rounded w-full" value={formData.fee} onChange={(e) => setFormData({ ...formData, fee: e.target.value })} />
-                              <button type="submit" className="px-4 py-2 bg-green-600 text-white rounded">Save</button>
-                          </form>
-                      )}
+    return (
+        <div className="flex flex-col min-h-screen bg-gray-100">
+            <Header />
+            <div className="flex flex-1">
+                <DoctorSidebar />
+                <main className="flex-1 p-6">
+                    <div className="bg-white p-6 rounded-lg shadow-md w-full h-full">
+                        {!doctor ? (
+                            <p>Loading...</p>
+                        ) : !isEditing ? (
+                            <>
+                                <div className="flex items-center mb-6">
+                                    <img
+                                        src="/assets/doctor-img.png" // Ispravljena putanja
+                                        alt="Doctor"
+                                        className="w-32 h-32 rounded-full object-cover mr-6"
+                                    />
+                                    <div>
+                                        <h1 className="text-3xl font-bold text-gray-800">
+                                            {doctor.firstName} {doctor.lastName}
+                                        </h1>
+                                        <p className="text-gray-600 text-lg">{doctor.speciality}</p>
+                                        <p className="text-gray-600">{doctor.experience} Years</p>
+                                    </div>
+                                </div>
+                                <div className="mt-6">
+                                    <h2 className="text-xl font-bold text-gray-800">About:</h2>
+                                    <p className="text-gray-700 mt-2">{doctor.about}</p>
+                                </div>
+                                <div className="mt-6">
+                                    <h2 className="text-xl font-bold text-gray-800">
+                                        Appointment Fee:
+                                    </h2>
+                                    <p className="text-gray-700 mt-2">{doctor.fee} BAM</p>
+                                </div>
 
-          </div>
-        </main>
-      </div>
-    </div>
-  );
+
+
+                                <div className="mt-6">
+                                    <button
+                                        onClick={() => setIsEditing(true)}
+                                        className="px-6 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+                                    >
+                                        Edit
+                                    </button>
+                                </div>
+                            </>
+                        ) : (
+                            <form className="space-y-4" onSubmit={handleUpdate}>
+                                <div>
+                                    <label htmlFor="firstName" className="block text-gray-700 font-medium mb-1">
+                                        First Name
+                                    </label>
+                                    <input
+                                        id="firstName"
+                                        className="p-2 border rounded w-full"
+                                        value={formData.firstName}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, firstName: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="lastName" className="block text-gray-700 font-medium mb-1">
+                                        Last Name
+                                    </label>
+                                    <input
+                                        id="lastName"
+                                        className="p-2 border rounded w-full"
+                                        value={formData.lastName}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, lastName: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="speciality" className="block text-gray-700 font-medium mb-1">
+                                        Speciality
+                                    </label>
+                                    <input
+                                        id="speciality"
+                                        className="p-2 border rounded w-full"
+                                        value={formData.speciality}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, speciality: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="experience" className="block text-gray-700 font-medium mb-1">
+                                        Experience (Years)
+                                    </label>
+                                    <input
+                                        id="experience"
+                                        type="number"
+                                        className="p-2 border rounded w-full"
+                                        value={formData.experience}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, experience: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="about" className="block text-gray-700 font-medium mb-1">
+                                        About
+                                    </label>
+                                    <textarea
+                                        id="about"
+                                        className="p-2 border rounded w-full"
+                                        value={formData.about}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, about: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <div>
+                                    <label htmlFor="fee" className="block text-gray-700 font-medium mb-1">
+                                        Appointment Fee (BAM)
+                                    </label>
+                                    <input
+                                        id="fee"
+                                        type="number"
+                                        className="p-2 border rounded w-full"
+                                        value={formData.fee}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, fee: e.target.value })
+                                        }
+                                    />
+                                </div>
+                                <button
+                                    type="submit"
+                                    className="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700"
+                                >
+                                    Save
+                                </button>
+                            </form>
+                        )}
+                    </div>
+                </main>
+            </div>
+        </div>
+    );
 };
 
 export default DoctorProfile;
