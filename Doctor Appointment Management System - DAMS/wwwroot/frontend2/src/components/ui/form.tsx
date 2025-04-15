@@ -11,7 +11,6 @@ import {
   type FieldValues,
 } from "react-hook-form"
 
-import { cn } from "@/lib/utils"
 import { Label } from "@/components/ui/label"
 
 const Form = FormProvider
@@ -78,7 +77,7 @@ function FormItem({ className, ...props }: React.ComponentProps<"div">) {
     <FormItemContext.Provider value={{ id }}>
       <div
         data-slot="form-item"
-        className={cn("grid gap-2", className)}
+        className={`grid gap-2 ${className}`}
         {...props}
       />
     </FormItemContext.Provider>
@@ -95,7 +94,7 @@ function FormLabel({
     <Label
       data-slot="form-label"
       data-error={!!error}
-      className={cn("data-[error=true]:text-destructive", className)}
+      className={`data-[error=true]:text-destructive ${className}`}
       htmlFor={formItemId}
       {...props}
     />
@@ -127,7 +126,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-description"
       id={formDescriptionId}
-      className={cn("text-muted-foreground text-sm", className)}
+      className={`text-muted-foreground text-sm ${className}`}
       {...props}
     />
   )
@@ -145,7 +144,7 @@ function FormMessage({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-message"
       id={formMessageId}
-      className={cn("text-destructive text-sm", className)}
+      className={`text-destructive text-sm ${className}`}
       {...props}
     >
       {body}

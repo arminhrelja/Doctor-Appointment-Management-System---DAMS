@@ -22,8 +22,27 @@ function RegisterForm() {
     resolver: zodResolver(registerSchema),
   });
 
-  const onSubmit = (data: RegisterFormData) => {
-    console.log("Register data:", data);
+  const onSubmit = async (data: RegisterFormData) => {
+    try {
+      const response = await fetch('/api/Auth/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        alert('Registration successful! Please log in.');
+        window.location.href = '/login';
+      } else {
+        const errorData = await response.json();
+        alert(`Registration failed: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Error during registration:', error);
+      alert('An error occurred. Please try again later.');
+    }
   };
 
   return (

@@ -23,6 +23,23 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             _configuration = configuration;
         }
 
+        [HttpPost("register")]
+        public IActionResult Register([FromBody] User newUser)
+        {
+            if (_context.Users.Any(u => u.Email == newUser.Email))
+            {
+                return BadRequest(new { message = "Email is already in use." });
+            }
+
+            newUser.RoleId = 1; // RoleId for patients
+            newUser.CreatedAt = DateTime.UtcNow;
+
+            _context.Users.Add(newUser);
+            _context.SaveChanges();
+
+            return Ok(new { message = "Registration successful. Please log in." });
+        }
+
         [HttpPost("login")]
         public IActionResult Login([FromBody] Models.LoginRequest loginRequest)
         {
@@ -42,13 +59,23 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             }
 
             var token = GenerateJwtToken(user, role.RoleName);
-            return Ok(new { Token = token, Role = role.RoleName, UserId = user.UserId });
 
+            if (user.RoleId == 1) // Redirect patients to the home page
+            {
+                return Ok(new { Token = token, Role = role.RoleName, UserId = user.UserId, RedirectUrl = "/" });
+            }
+
+            return Ok(new { Token = token, Role = role.RoleName, UserId = user.UserId });
         }
 
         private string GenerateJwtToken(User user, string role)
         {
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var jwtKey = _configuration["Jwt:Key"];
+            if (string.IsNullOrEmpty(jwtKey))
+            {
+                throw new InvalidOperationException("JWT key is not configured.");
+            }
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {

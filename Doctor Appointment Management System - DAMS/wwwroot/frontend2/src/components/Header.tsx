@@ -40,23 +40,7 @@ function Header() {
                                     </li>
 
                                     <li>
-                                        <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> Careers </a>
-                                    </li>
-
-                                    <li>
-                                        <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> History </a>
-                                    </li>
-
-                                    <li>
-                                        <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> Services </a>
-                                    </li>
-
-                                    <li>
-                                        <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> Projects </a>
-                                    </li>
-
-                                    <li>
-                                        <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> Blog </a>
+                                        <Link className="text-gray-500 transition hover:text-gray-500/75" to="/all-doctors"> All Doctors </Link>
                                     </li>
                                 </ul>
                             </nav>

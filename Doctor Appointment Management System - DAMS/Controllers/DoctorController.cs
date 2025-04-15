@@ -48,23 +48,29 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
         [HttpGet("list")]
         public ActionResult<IEnumerable<DoctorDto>> GetAllDoctors()
         {
-            var doctors = _context.Users
-                .Where(u => u.RoleId == 2)
-                .Select(u => new DoctorDto
-                {
-                    UserId = u.UserId,
-                    FirstName = u.FirstName,
-                    LastName = u.LastName,
-                    Speciality = u.Speciality ?? "Unknown",
-                    About = u.About ?? "No description available.",
-                    Experience = u.Experience ?? 0,
-                    Fee = u.Fee ?? 0
-                })
-                .ToList();
+            try
+            {
+                var doctors = _context.Users
+                    .Where(u => u.RoleId == 2)
+                    .Select(u => new DoctorDto
+                    {
+                        UserId = u.UserId,
+                        FirstName = u.FirstName,
+                        LastName = u.LastName,
+                        Speciality = u.Speciality ?? "Unknown",
+                        About = u.About ?? "No description available.",
+                        Experience = u.Experience ?? 0,
+                        Fee = u.Fee ?? 0
+                    })
+                    .ToList();
 
-            return Ok(doctors);
+                return Ok(doctors);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Server error", error = ex.Message });
+            }
         }
-
         [HttpGet("{userId}")]
         public IActionResult GetDoctor(int userId)
         {
@@ -89,8 +95,25 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(dto);
         }
 
+        [HttpGet("specialty/{specialty}")]
+        public ActionResult<IEnumerable<DoctorDto>> GetDoctorsBySpecialty(string specialty)
+        {
+            var doctors = _context.Users
+                .Where(u => u.RoleId == 2 && u.Speciality != null && u.Speciality.ToLower() == specialty.ToLower())
+                .Select(u => new DoctorDto
+                {
+                    UserId = u.UserId,
+                    FirstName = u.FirstName,
+                    LastName = u.LastName,
+                    Speciality = u.Speciality ?? "Unknown",
+                    About = u.About ?? "No description available.",
+                    Experience = u.Experience ?? 0,
+                    Fee = u.Fee ?? 0
+                })
+                .ToList();
 
-
+            return Ok(doctors);
+        }
         [HttpPut("update/{id}")]
         public IActionResult UpdateDoctor(int id, [FromBody] UpdateDoctorDTO dto)
         {
@@ -121,10 +144,25 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
                 }
             });
         }
-
-
-
-
-
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

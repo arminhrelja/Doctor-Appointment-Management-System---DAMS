@@ -9,6 +9,7 @@ import DoctorsList from './Admin/DoctorList';
 import DoctorDashboard from './Doctor/DoctorDashboard';
 import DoctorAppointments from './Doctor/DoctorAppointments';
 import DoctorProfile from './Doctor/DoctorProfile';
+import AllDoctors from './AllDoctors';
 
 function AppRouter() {
   return (
@@ -24,6 +25,7 @@ function AppRouter() {
         <Route path="/doctor/dashboard" element={<DoctorDashboard />} />
         <Route path="/doctor/appointments" element={<DoctorAppointments />} />
         <Route path="/doctor/profile" element={<DoctorProfile />} />
+        <Route path="/all-doctors" element={<AllDoctors />} />
       </Routes>
     </Router>
   );
