@@ -24,20 +24,40 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
         }
 
         [HttpPost("register")]
-        public IActionResult Register([FromBody] User newUser)
+        public IActionResult Register([FromBody] Models.DTOs.RegisterDTO dto)
         {
-            if (_context.Users.Any(u => u.Email == newUser.Email))
+            try
             {
-                return BadRequest(new { message = "Email is already in use." });
+                if (_context.Users.Any(u => u.Email == dto.Email))
+                    return BadRequest(new { message = "Email is already in use." });
+
+                if (string.IsNullOrWhiteSpace(dto.FirstName) ||
+                    string.IsNullOrWhiteSpace(dto.LastName) ||
+                    string.IsNullOrWhiteSpace(dto.Email) ||
+                    string.IsNullOrWhiteSpace(dto.Password))
+                    return BadRequest(new { message = "All required fields must be filled." });
+
+                var user = new User
+                {
+                    FirstName = dto.FirstName,
+                    LastName = dto.LastName,
+                    Email = dto.Email,
+                    Password = dto.Password,
+                    PhoneNumber = string.IsNullOrWhiteSpace(dto.PhoneNumber) ? null : dto.PhoneNumber,
+                    DateOfBirth = dto.DateOfBirth,
+                    RoleId = 1,
+                    CreatedAt = DateTime.UtcNow
+                };
+
+                _context.Users.Add(user);
+                _context.SaveChanges();
+
+                return Ok(new { message = "Registration successful. Please log in." });
             }
-
-            newUser.RoleId = 1; // RoleId for patients
-            newUser.CreatedAt = DateTime.UtcNow;
-
-            _context.Users.Add(newUser);
-            _context.SaveChanges();
-
-            return Ok(new { message = "Registration successful. Please log in." });
+            catch (Exception ex)
+            {
+                return StatusCode(500, new { message = "Registration failed.", error = ex.Message });
+            }
         }
 
         [HttpPost("login")]

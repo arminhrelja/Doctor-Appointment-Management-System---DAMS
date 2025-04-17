@@ -34,11 +34,15 @@ const DepartmentIcons: React.FC = () => {
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      <Carousel>
+      <Carousel opts={{
+          align: "start",
+          slidesToScroll: 1,
+        }}
+        className="w-full">
         <CarouselPrevious />
         <CarouselContent className="mb-10">
           {departments.map((dept, index) => (
-            <CarouselItem key={index} className="basis-1/3">
+            <CarouselItem key={index} className="pl-2 md:basis-1/3 sm:basis-1/2 basis-full">
               <Card
                 className="grid grid-cols-1 p-4 shadow-md cursor-pointer hover:bg-gray-100 transition"
                 onClick={() => handleClick(dept.name)}

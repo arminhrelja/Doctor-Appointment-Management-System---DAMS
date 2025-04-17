@@ -24,7 +24,7 @@ function RegisterForm() {
 
   const onSubmit = async (data: RegisterFormData) => {
     try {
-      const response = await fetch('/api/Auth/register', {
+      const response = await fetch('https://localhost:7036/api/Auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -36,8 +36,15 @@ function RegisterForm() {
         alert('Registration successful! Please log in.');
         window.location.href = '/login';
       } else {
-        const errorData = await response.json();
-        alert(`Registration failed: ${errorData.message}`);
+        let errorMessage = "Registration failed.";
+        try {
+          const errorData = await response.json();
+          errorMessage = errorData.message || errorMessage;
+        } catch {
+          const errorText = await response.text();
+          if (errorText) errorMessage = errorText;
+        }
+        alert(errorMessage);
       }
     } catch (error) {
       console.error('Error during registration:', error);

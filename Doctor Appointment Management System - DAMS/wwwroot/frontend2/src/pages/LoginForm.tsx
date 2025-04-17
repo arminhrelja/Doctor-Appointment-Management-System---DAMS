@@ -30,7 +30,7 @@ function LoginForm() {
             } else if (data.role === "Doctor") {
                 navigate("/doctor/dashboard");
             } else if (data.role === "Patient") {
-                navigate("/patient/dashboard");
+                navigate("/");
             } else {
                 navigate("/");
             }

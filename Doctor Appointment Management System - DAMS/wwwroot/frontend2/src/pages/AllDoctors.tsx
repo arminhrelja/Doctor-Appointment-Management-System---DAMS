@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import SpecialtySidebar from "@/components/SpecialtySidebar";
+import { useLocation } from "react-router-dom";
 
 interface Doctor {
   userId: number;
@@ -16,6 +17,7 @@ const AllDoctors: React.FC = () => {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const location = useLocation();
 
   const specialties = [
     { name: "Cardiology", icon: "/assets/cardiology.svg" },
@@ -44,8 +46,14 @@ const AllDoctors: React.FC = () => {
 
   // Initial fetch
   useEffect(() => {
-    fetchAllDoctors();
-  }, []);
+    const params = new URLSearchParams(location.search);
+    const specialty = params.get("specialty");
+    if (specialty) {
+      handleSpecialtyClick(specialty);
+    } else {
+      fetchAllDoctors();
+    }
+  }, [location.search]);
 
   const handleSpecialtyClick = async (specialty: string) => {
     try {
