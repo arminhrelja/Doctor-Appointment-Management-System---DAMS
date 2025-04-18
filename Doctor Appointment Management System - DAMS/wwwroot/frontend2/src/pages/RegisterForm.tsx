@@ -6,7 +6,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { toast } from "sonner";
-import Header from "@/components/Header";
 
 const registerSchema = z.object({
   firstName: z.string().min(3, "First name must be at least 3 characters"),
