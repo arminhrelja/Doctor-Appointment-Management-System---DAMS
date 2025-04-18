@@ -1,85 +1,92 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import AdminSidebar from '@/components/AdminSidebar';
 
 const Appointments: React.FC = () => {
+  const [appointments, setAppointments] = useState<any[]>([]);
+
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const response = await fetch('https://localhost:7036/api/Appointment/list');
+        const data = await response.json();
+        setAppointments(data);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
+
+  const cancelAppointment = async (id: number) => {
+    try {
+      const response = await fetch(`https://localhost:7036/api/Appointment/cancel/${id}`, {
+        method: 'PUT',
+      });
+
+      if (response.ok) {
+        alert('Appointment cancelled successfully.');
+        setAppointments((prev) => prev.map((appt) => appt.appointmentId === id ? { ...appt, status: 'Cancelled' } : appt));
+      } else {
+        alert('Failed to cancel appointment.');
+      }
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+    }
+  };
+
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
       <div className="flex flex-1">
         <AdminSidebar />
-        <main className="flex-1 p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h1 className="text-2xl font-bold">Appointments</h1>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white">
+        <main className="flex-1 p-6 flex flex-col items-center">
+          <h1 className="text-3xl font-bold mb-8 text-blue-700">All Appointments</h1>
+          <div className="overflow-x-auto w-full max-w-5xl">
+            <table className="min-w-full bg-white border rounded-lg shadow-lg">
               <thead>
                 <tr>
                   <th className="py-3 px-6 border-b text-left">#</th>
                   <th className="py-3 px-6 border-b text-left">Patient</th>
-                  <th className="py-3 px-6 border-b text-left">Age</th>
-                  <th className="py-3 px-6 border-b text-left">Date & Time</th>
                   <th className="py-3 px-6 border-b text-left">Doctor</th>
-                  <th className="py-3 px-6 border-b text-left">Fees</th>
+                  <th className="py-3 px-6 border-b text-left">Date & Time</th>
+                  <th className="py-3 px-6 border-b text-left">Status</th>
                   <th className="py-3 px-6 border-b text-left">Action</th>
                 </tr>
               </thead>
               <tbody className="text-lg">
-                <tr>
-                  <td className="py-4 px-6 border-b">1</td>
-                  <td className="py-4 px-6 border-b">Avinash Kr</td>
-                  <td className="py-4 px-6 border-b">31</td>
-                  <td className="py-4 px-6 border-b">5 Oct 2024, 12:00 PM</td>
-                  <td className="py-4 px-6 border-b">Dr. Richard James</td>
-                  <td className="py-4 px-6 border-b">$50</td>
-                  <td className="py-4 px-6 border-b text-red-500">Cancelled</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 border-b">2</td>
-                  <td className="py-4 px-6 border-b">GreatStack</td>
-                  <td className="py-4 px-6 border-b">24</td>
-                  <td className="py-4 px-6 border-b">26 Sep 2024, 11:00 AM</td>
-                  <td className="py-4 px-6 border-b">Dr. Richard James</td>
-                  <td className="py-4 px-6 border-b">$40</td>
-                  <td className="py-4 px-6 border-b text-red-500">Cancelled</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 border-b">3</td>
-                  <td className="py-4 px-6 border-b">GreatStack</td>
-                  <td className="py-4 px-6 border-b">24</td>
-                  <td className="py-4 px-6 border-b">23 Sep 2024, 01:00 PM</td>
-                  <td className="py-4 px-6 border-b">Dr. Christopher Davis</td>
-                  <td className="py-4 px-6 border-b">$50</td>
-                  <td className="py-4 px-6 border-b text-green-500">Completed</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 border-b">4</td>
-                  <td className="py-4 px-6 border-b">GreatStack</td>
-                  <td className="py-4 px-6 border-b">24</td>
-                  <td className="py-4 px-6 border-b">25 Sep 2024, 02:00 PM</td>
-                  <td className="py-4 px-6 border-b">Dr. Richard James</td>
-                  <td className="py-4 px-6 border-b">$40</td>
-                  <td className="py-4 px-6 border-b text-green-500">Completed</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 border-b">5</td>
-                  <td className="py-4 px-6 border-b">GreatStack</td>
-                  <td className="py-4 px-6 border-b">24</td>
-                  <td className="py-4 px-6 border-b">23 Sep 2024, 11:00 AM</td>
-                  <td className="py-4 px-6 border-b">Dr. Richard James</td>
-                  <td className="py-4 px-6 border-b">$40</td>
-                  <td className="py-4 px-6 border-b text-green-500">Completed</td>
-                </tr>
-                <tr>
-                  <td className="py-4 px-6 border-b">6</td>
-                  <td className="py-4 px-6 border-b">GreatStack</td>
-                  <td className="py-4 px-6 border-b">24</td>
-                  <td className="py-4 px-6 border-b">22 Sep 2024, 06:00 PM</td>
-                  <td className="py-4 px-6 border-b">Dr. Emily Larson</td>
-                  <td className="py-4 px-6 border-b">$60</td>
-                  <td className="py-4 px-6 border-b text-green-500">Completed</td>
-                </tr>
+                {appointments.length === 0 && (
+                  <tr>
+                    <td colSpan={6} className="text-center text-gray-500 py-8 text-xl">No appointments found.</td>
+                  </tr>
+                )}
+                {appointments.map((appointment) => (
+                  <tr key={appointment.appointmentId} className="hover:bg-gray-50 transition">
+                    <td className="py-4 px-6 border-b">{appointment.appointmentId}</td>
+                    <td className="py-4 px-6 border-b flex items-center gap-3">
+                      <img src="/assets/doctor-img.png" alt="Doctor" className="w-10 h-10 rounded-full object-cover border-2 border-blue-200" />
+                      <span>{appointment.patient.firstName} {appointment.patient.lastName}</span>
+                    </td>
+                    <td className="py-4 px-6 border-b">Dr. {appointment.doctor.firstName} {appointment.doctor.lastName}</td>
+                    <td className="py-4 px-6 border-b">{new Date(appointment.appointmentDate).toLocaleString()}</td>
+                    <td className="py-4 px-6 border-b">
+                      <span className={`px-3 py-1 rounded-full text-lg font-semibold ${appointment.status === 'Cancelled' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
+                        {appointment.status}
+                      </span>
+                    </td>
+                    <td className="py-4 px-6 border-b">
+                      {appointment.status !== 'Cancelled' && (
+                        <button
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                          onClick={() => cancelAppointment(appointment.appointmentId)}
+                        >
+                          Cancel
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
               </tbody>
             </table>
           </div>

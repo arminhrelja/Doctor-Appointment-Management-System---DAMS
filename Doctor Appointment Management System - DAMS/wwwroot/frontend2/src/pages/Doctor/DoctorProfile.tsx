@@ -103,6 +103,7 @@ const DoctorProfile: React.FC = () => {
                                         </h1>
                                         <p className="text-gray-600 text-lg">{doctor.speciality}</p>
                                         <p className="text-gray-600">{doctor.experience} Years</p>
+                                        <p className="text-blue-700 text-lg font-semibold">Institution: {doctor.institutionName || 'Unknown'}</p>
                                     </div>
                                 </div>
                                 <div className="mt-6">

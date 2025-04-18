@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
@@ -17,6 +17,12 @@ type FormData = {
     about: string;
 };
 
+type Department = {
+  departmentId: number;
+  departmentName: string;
+  institution: { name: string };
+};
+
 const AddDoctor: React.FC = () => {
     const {
         register,
@@ -26,17 +32,22 @@ const AddDoctor: React.FC = () => {
         reset,
     } = useForm<FormData>();
 
+    const [departments, setDepartments] = useState<Department[]>([]);
+    const [selectedDepartment, setSelectedDepartment] = useState<number | null>(null);
+
+    useEffect(() => {
+      fetch('https://localhost:7036/api/Institution/departments')
+        .then(res => res.json())
+        .then(data => setDepartments(data));
+    }, []);
+
     const onSubmit = async (data: FormData) => {
         try {
             const requestData = {
-                firstName: data.firstName,
-                lastName: data.lastName,
-                email: data.email,
-                password: data.password,
-                speciality: data.speciality,
+                ...data,
                 experience: Number(data.experience),
                 fee: Number(data.fee),
-                about: data.about,
+                departmentId: selectedDepartment,
                 roleId: 2
             };
 
@@ -114,6 +125,20 @@ const AddDoctor: React.FC = () => {
                           <label className="mb-2 font-semibold text-lg">Fee (BAM)</label>
                           <input type="number" className="p-3 border rounded" {...register("fee", { required: "Fee is required" })} />
                           {errors.fee && <span className="text-red-500">{errors.fee.message}</span>}
+                      </div>
+                      <div className="flex flex-col">
+                          <label className="mb-2 font-semibold text-lg">Department</label>
+                          <select
+                            className="p-3 border rounded"
+                            value={selectedDepartment ?? ''}
+                            onChange={e => setSelectedDepartment(Number(e.target.value))}
+                            required
+                          >
+                            <option value="" disabled>Select department</option>
+                            {departments.map(dep => (
+                              <option key={dep.departmentId} value={dep.departmentId}>{dep.departmentName} ({dep.institution.name})</option>
+                            ))}
+                          </select>
                       </div>
                       <div className="col-span-2 flex flex-col">
                           <label className="mb-2 font-semibold text-lg">About Doctor</label>

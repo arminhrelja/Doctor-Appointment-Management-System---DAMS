@@ -42,25 +42,37 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             _context.Users.Add(doctor);
             _context.SaveChanges();
 
+            // Dodaj vezu u UserInstitution (UserId, DepartmentId)
+            var userInstitution = new UserInstitution
+            {
+                UserId = doctor.UserId,
+                DepartmentId = dto.DepartmentId
+            };
+            _context.UserInstitutions.Add(userInstitution);
+            _context.SaveChanges();
+
             return Ok(new { message = "Doctor added successfully." });
         }
 
         [HttpGet("list")]
-        public ActionResult<IEnumerable<DoctorDto>> GetAllDoctors()
+        public ActionResult<IEnumerable<object>> GetAllDoctors()
         {
             try
             {
                 var doctors = _context.Users
                     .Where(u => u.RoleId == 2)
-                    .Select(u => new DoctorDto
-                    {
+                    .Select(u => new {
                         UserId = u.UserId,
                         FirstName = u.FirstName,
                         LastName = u.LastName,
                         Speciality = u.Speciality ?? "Unknown",
                         About = u.About ?? "No description available.",
                         Experience = u.Experience ?? 0,
-                        Fee = u.Fee ?? 0
+                        Fee = u.Fee ?? 0,
+                        InstitutionName = _context.UserInstitutions
+                            .Where(ui => ui.UserId == u.UserId)
+                            .Select(ui => ui.Department.Institution.Name)
+                            .FirstOrDefault() ?? "Unknown"
                     })
                     .ToList();
 
@@ -71,6 +83,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
                 return StatusCode(500, new { message = "Server error", error = ex.Message });
             }
         }
+
         [HttpGet("{userId}")]
         public IActionResult GetDoctor(int userId)
         {
@@ -81,15 +94,20 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
                 return NotFound(new { message = "Doctor not found for the given user ID" });
             }
 
-            var dto = new DoctorDto
-            {
+            var institutionName = _context.UserInstitutions
+                .Where(ui => ui.UserId == doctor.UserId)
+                .Select(ui => ui.Department.Institution.Name)
+                .FirstOrDefault() ?? "Unknown";
+
+            var dto = new {
                 UserId = doctor.UserId,
                 FirstName = doctor.FirstName,
                 LastName = doctor.LastName,
                 Speciality = doctor.Speciality ?? "Unknown",
                 About = doctor.About ?? "No description available.",
                 Experience = doctor.Experience ?? 0,
-                Fee = doctor.Fee ?? 0
+                Fee = doctor.Fee ?? 0,
+                InstitutionName = institutionName
             };
 
             return Ok(dto);

@@ -10,6 +10,9 @@ import DoctorDashboard from './Doctor/DoctorDashboard';
 import DoctorAppointments from './Doctor/DoctorAppointments';
 import DoctorProfile from './Doctor/DoctorProfile';
 import AllDoctors from './AllDoctors';
+import DoctorDetails from './Patient/DoctorDetails';
+import AddInstitution from './Admin/AddInstitution';
+import MyAppointments from './Patient/MyAppointments';
 
 function AppRouter() {
   return (
@@ -26,6 +29,9 @@ function AppRouter() {
         <Route path="/doctor/appointments" element={<DoctorAppointments />} />
         <Route path="/doctor/profile" element={<DoctorProfile />} />
         <Route path="/all-doctors" element={<AllDoctors />} />
+        <Route path="/doctor-details/:doctorId" element={<DoctorDetails />} />
+        <Route path="/admin/add-institution" element={<AddInstitution />} />
+        <Route path="/patient/my-appointments" element={<MyAppointments />} />
       </Routes>
     </Router>
   );

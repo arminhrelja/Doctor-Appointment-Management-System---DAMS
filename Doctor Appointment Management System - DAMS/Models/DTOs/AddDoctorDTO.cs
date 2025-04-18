@@ -10,5 +10,6 @@
         public int? Experience { get; set; }
         public decimal? Fee { get; set; }
         public string? About { get; set; }
+        public int DepartmentId { get; set; } // departmentId umjesto institutionId
     }
 }

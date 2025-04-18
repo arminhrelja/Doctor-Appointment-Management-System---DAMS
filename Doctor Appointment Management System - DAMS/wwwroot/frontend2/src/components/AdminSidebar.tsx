@@ -29,6 +29,11 @@ const AdminSidebar: React.FC = () => {
               <Users className="mr-2" size={24} />Doctors List
             </Link>
           </li>
+          <li>
+            <Link to="/admin/add-institution" className={`text-gray-700 flex items-center ${location.pathname === '/admin/add-institution' ? 'font-bold' : ''}`}>
+              <span className="mr-2">🏥</span>Add Institution
+            </Link>
+          </li>
         </ul>
       </nav>
     </aside>

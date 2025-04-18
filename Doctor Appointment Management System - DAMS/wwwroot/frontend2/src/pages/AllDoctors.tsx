@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import SpecialtySidebar from "@/components/SpecialtySidebar";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import Header from "@/components/Header";
 
 interface Doctor {
   userId: number;
@@ -11,6 +12,7 @@ interface Doctor {
   about: string;
   experience: number;
   fee: number;
+  institutionName?: string;
 }
 
 const AllDoctors: React.FC = () => {
@@ -18,6 +20,7 @@ const AllDoctors: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const specialties = [
     { name: "Cardiology", icon: "/assets/cardiology.svg" },
@@ -75,65 +78,75 @@ const AllDoctors: React.FC = () => {
     }
   };
 
+  const handleDoctorClick = (doctorId: number) => {
+    navigate(`/doctor-details/${doctorId}`);
+  };
+
   return (
-    <div className="all-doctors flex flex-col items-center p-6">
-      <h1 className="text-2xl font-bold mb-6">Browse through the doctors specialist</h1>
+    <>
+      <Header />
+      <div className="all-doctors flex flex-col items-center p-6">
+        <h1 className="text-2xl font-bold mb-6">Browse through the doctors specialist</h1>
 
-      <div className="flex w-full max-w-7xl gap-6">
-        {/* Sidebar */}
-        <div className="w-1/4">
-          <SpecialtySidebar specialties={specialties.map(specialty => specialty.name)} onSpecialtyClick={handleSpecialtyClick} onReset={fetchAllDoctors} />
+        <div className="flex w-full max-w-7xl gap-6">
+          {/* Sidebar */}
+          <div className="w-1/4">
+            <SpecialtySidebar specialties={specialties.map(specialty => specialty.name)} onSpecialtyClick={handleSpecialtyClick} onReset={fetchAllDoctors} />
+          </div>
+
+          {/* Doctors Grid */}
+          <div className="w-3/4">
+            {loading ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {Array.from({ length: 6 }).map((_, idx) => (
+                  <div key={idx} className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center text-center">
+                    <Skeleton className="w-24 h-24 rounded-full mb-4" />
+                    <Skeleton className="w-3/4 h-4 mb-2" />
+                    <Skeleton className="w-1/2 h-3 mb-2" />
+                    <Skeleton className="w-1/3 h-3 mb-2" />
+                    <Skeleton className="w-full h-3 mt-2 mb-1" />
+                    <Skeleton className="w-2/3 h-3 mt-1" />
+                    <Skeleton className="w-1/2 h-3 mt-1" />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {doctors.map((doctor) => (
+                  <div
+                    key={doctor.userId}
+                    className="doctor-card bg-white p-4 rounded-lg shadow-md flex flex-col items-center text-center cursor-pointer"
+                    onClick={() => handleDoctorClick(doctor.userId)}
+                  >
+                    <img
+                      src="/assets/doctor-img.png"
+                      alt="Doctor"
+                      className="w-24 h-24 rounded-full mb-4"
+                    />
+                    <h3 className="text-lg font-semibold">
+                      Dr. {doctor.firstName} {doctor.lastName}
+                    </h3>
+                    <p className="text-sm text-gray-500 mb-2">{doctor.speciality}</p>
+                    <p className="text-sm text-green-600 font-medium">Available</p>
+                    <p className="text-sm text-gray-700 mt-2">{doctor.about}</p>
+                    <p className="text-sm text-gray-700 mt-2">Experience: {doctor.experience} years</p>
+                    <p className="text-sm text-gray-700 mt-2">Fee: ${doctor.fee}</p>
+                    <p className="text-sm text-blue-700 mt-2 font-semibold">Institution: {doctor.institutionName || 'Unknown'}</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
         </div>
 
-        {/* Doctors Grid */}
-        <div className="w-3/4">
-          {loading ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {Array.from({ length: 6 }).map((_, idx) => (
-                <div key={idx} className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center text-center">
-                  <Skeleton className="w-24 h-24 rounded-full mb-4" />
-                  <Skeleton className="w-3/4 h-4 mb-2" />
-                  <Skeleton className="w-1/2 h-3 mb-2" />
-                  <Skeleton className="w-1/3 h-3 mb-2" />
-                  <Skeleton className="w-full h-3 mt-2 mb-1" />
-                  <Skeleton className="w-2/3 h-3 mt-1" />
-                  <Skeleton className="w-1/2 h-3 mt-1" />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {doctors.map((doctor) => (
-                <div
-                  key={doctor.userId}
-                  className="doctor-card bg-white p-4 rounded-lg shadow-md flex flex-col items-center text-center"
-                >
-                  <img
-                    src="/assets/doctor-img.png"
-                    alt="Doctor"
-                    className="w-24 h-24 rounded-full mb-4"
-                  />
-                  <h3 className="text-lg font-semibold">
-                    Dr. {doctor.firstName} {doctor.lastName}
-                  </h3>
-                  <p className="text-sm text-gray-500 mb-2">{doctor.speciality}</p>
-                  <p className="text-sm text-green-600 font-medium">Available</p>
-                  <p className="text-sm text-gray-700 mt-2">{doctor.about}</p>
-                  <p className="text-sm text-gray-700 mt-2">Experience: {doctor.experience} years</p>
-                  <p className="text-sm text-gray-700 mt-2">Fee: ${doctor.fee}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        {error && (
+          <div className="error-message text-red-500 mt-4">
+            <p>Error: {error}</p>
+          </div>
+        )}
       </div>
+    </>
 
-      {error && (
-        <div className="error-message text-red-500 mt-4">
-          <p>Error: {error}</p>
-        </div>
-      )}
-    </div>
   );
 };
 
