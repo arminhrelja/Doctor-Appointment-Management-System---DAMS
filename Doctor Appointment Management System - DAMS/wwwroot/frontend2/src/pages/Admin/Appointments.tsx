@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import AdminSidebar from '@/components/AdminSidebar';
+import { toast } from "sonner";
 
 const Appointments: React.FC = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
@@ -26,10 +27,10 @@ const Appointments: React.FC = () => {
       });
 
       if (response.ok) {
-        alert('Appointment cancelled successfully.');
+        toast.success('Appointment cancelled successfully.');
         setAppointments((prev) => prev.map((appt) => appt.appointmentId === id ? { ...appt, status: 'Cancelled' } : appt));
       } else {
-        alert('Failed to cancel appointment.');
+        toast.error('Failed to cancel appointment.');
       }
     } catch (error) {
       console.error('Error cancelling appointment:', error);
@@ -65,7 +66,7 @@ const Appointments: React.FC = () => {
                   <tr key={appointment.appointmentId} className="hover:bg-gray-50 transition">
                     <td className="py-4 px-6 border-b">{appointment.appointmentId}</td>
                     <td className="py-4 px-6 border-b flex items-center gap-3">
-                      <img src="/assets/doctor-img.png" alt="Doctor" className="w-10 h-10 rounded-full object-cover border-2 border-blue-200" />
+                      <img src="/assets/patient-img.png" alt="Patient" className="w-10 h-10 rounded-full object-cover border-2 border-blue-200" />
                       <span>{appointment.patient.firstName} {appointment.patient.lastName}</span>
                     </td>
                     <td className="py-4 px-6 border-b">Dr. {appointment.doctor.firstName} {appointment.doctor.lastName}</td>
@@ -76,7 +77,7 @@ const Appointments: React.FC = () => {
                       </span>
                     </td>
                     <td className="py-4 px-6 border-b">
-                      {appointment.status !== 'Cancelled' && (
+                      {appointment.status !== 'Cancelled' && appointment.status !== 'Completed' && (
                         <button
                           className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
                           onClick={() => cancelAppointment(appointment.appointmentId)}

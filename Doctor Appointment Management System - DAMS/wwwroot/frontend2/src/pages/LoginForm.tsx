@@ -4,6 +4,8 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link, useNavigate } from "react-router-dom";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { toast } from "sonner";
+import Header from "@/components/Header";
 
 function LoginForm() {
     const [email, setEmail] = useState("");
@@ -36,7 +38,7 @@ function LoginForm() {
             }
 
         } else {
-            alert("Invalid login credentials!");
+            toast.error("Invalid login credentials!");
         }
     };
 
@@ -91,7 +93,7 @@ function LoginForm() {
                         />
                     </div>
                     <Button
-                        className="bg-blue-700 text-white w-full py-2 rounded hover:bg-blue-800"
+                        className="bg-blue-700 text-white w-full py-2 rounded-lg hover:bg-blue-800 shadow-md font-semibold text-lg transition"
                         onClick={handleLogin}
                     >
                         Login

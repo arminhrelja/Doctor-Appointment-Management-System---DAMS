@@ -5,6 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import Header from "@/components/Header";
 
 const registerSchema = z.object({
   firstName: z.string().min(3, "First name must be at least 3 characters"),
@@ -33,7 +35,7 @@ function RegisterForm() {
       });
 
       if (response.ok) {
-        alert('Registration successful! Please log in.');
+        toast.success('Registration successful! Please log in.');
         window.location.href = '/login';
       } else {
         let errorMessage = "Registration failed.";
@@ -44,11 +46,11 @@ function RegisterForm() {
           const errorText = await response.text();
           if (errorText) errorMessage = errorText;
         }
-        alert(errorMessage);
+        toast.error(errorMessage);
       }
     } catch (error) {
       console.error('Error during registration:', error);
-      alert('An error occurred. Please try again later.');
+      toast.error('An error occurred. Please try again later.');
     }
   };
 
@@ -82,7 +84,9 @@ function RegisterForm() {
             <div>
               <Input type="date" placeholder="Date of Birth (Optional)" {...register("dateOfBirth")} />
             </div>
-            <Button type="submit" className="w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800 transition">Register</Button>
+            <Button type="submit" variant="default" className="w-full bg-blue-700 text-white py-2 rounded-lg hover:bg-blue-800 transition shadow-md font-semibold text-lg">
+              Register
+            </Button>
           </form>
           <p className="text-center text-gray-600 mt-4">Already have an account? 
             <Link to="/login" className="text-blue-700 hover:underline"> Sign in</Link>

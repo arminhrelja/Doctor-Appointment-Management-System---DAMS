@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Home, Calendar, UserPlus, Users } from 'lucide-react';
+import { Home, Calendar, UserPlus, Users, Hospital } from 'lucide-react';
 
 const AdminSidebar: React.FC = () => {
   const location = useLocation();
@@ -31,7 +31,7 @@ const AdminSidebar: React.FC = () => {
           </li>
           <li>
             <Link to="/admin/add-institution" className={`text-gray-700 flex items-center ${location.pathname === '/admin/add-institution' ? 'font-bold' : ''}`}>
-              <span className="mr-2">🏥</span>Add Institution
+              <span className="mr-2"><Hospital /></span>Add Institution
             </Link>
           </li>
         </ul>

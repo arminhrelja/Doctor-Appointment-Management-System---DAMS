@@ -146,8 +146,11 @@ const AddDoctor: React.FC = () => {
                           {errors.about && <span className="text-red-500">{errors.about.message}</span>}
                       </div>
                       <div className="col-span-1 flex">
-                          <Button type="submit" className="bg-blue-700 text-white px-8 py-6 rounded-xl hover:bg-blue-800 text-xl cursor-pointer">
-                              Add Doctor
+                          <Button
+                            className="bg-blue-700 text-white px-8 py-6 rounded-xl hover:bg-blue-800 text-xl cursor-pointer shadow-md font-semibold transition"
+                            type="submit"
+                          >
+                            Add Doctor
                           </Button>
                       </div>
                   </form>

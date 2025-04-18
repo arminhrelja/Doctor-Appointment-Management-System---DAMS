@@ -1,9 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Header from '../../components/Header';
 import { Button } from '@/components/ui/button';
+import { toast } from "sonner";
+import { useNavigate } from "react-router-dom";
 
 const MyAppointments: React.FC = () => {
   const [appointments, setAppointments] = useState<any[]>([]);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const fetchAppointments = async () => {
@@ -26,10 +36,10 @@ const MyAppointments: React.FC = () => {
       });
 
       if (response.ok) {
-        alert('Appointment cancelled successfully.');
+        toast.success('Appointment cancelled successfully.');
         setAppointments((prev) => prev.filter((appt) => appt.appointmentId !== id));
       } else {
-        alert('Failed to cancel appointment.');
+        toast.error('Failed to cancel appointment.');
       }
     } catch (error) {
       console.error('Error cancelling appointment:', error);
@@ -41,31 +51,51 @@ const MyAppointments: React.FC = () => {
       <Header />
       <main className="flex-1 flex flex-col items-center p-6">
         <h1 className="text-3xl font-bold mb-8 text-blue-700">My Appointments</h1>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
-          {appointments.length === 0 && (
-            <div className="col-span-2 text-center text-gray-500 text-xl">No appointments found.</div>
-          )}
-          {appointments.map((appointment) => (
-            <div key={appointment.appointmentId} className="bg-white rounded-lg shadow-lg p-6 flex flex-col md:flex-row items-center gap-6">
-              <img
-                src="/assets/doctor-img.png"
-                alt="Doctor"
-                className="w-24 h-24 rounded-full object-cover border-2 border-blue-200 shadow-md mb-4 md:mb-0"
-              />
-              <div className="flex-1 flex flex-col gap-2">
-                <h2 className="text-xl font-bold text-blue-700 mb-1">Dr. {appointment.doctor.firstName} {appointment.doctor.lastName}</h2>
-                <p className="text-gray-600 text-lg">Date: <span className="font-semibold">{new Date(appointment.appointmentDate).toLocaleString()}</span></p>
-                <p className="text-gray-600 text-lg">Status: <span className={`font-semibold ${appointment.status === 'Cancelled' ? 'text-red-500' : 'text-green-600'}`}>{appointment.status}</span></p>
-                <Button
-                  className="mt-2 bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 w-fit"
-                  onClick={() => cancelAppointment(appointment.appointmentId)}
-                  disabled={appointment.status === 'Cancelled'}
-                >
-                  Cancel Appointment
-                </Button>
-              </div>
-            </div>
-          ))}
+        <div className="overflow-x-auto w-full max-w-5xl">
+          <table className="min-w-full bg-white border rounded-lg shadow-lg">
+            <thead>
+              <tr>
+                <th className="py-3 px-6 border-b text-left">#</th>
+                <th className="py-3 px-6 border-b text-left">Doctor</th>
+                <th className="py-3 px-6 border-b text-left">Date & Time</th>
+                <th className="py-3 px-6 border-b text-left">Status</th>
+                <th className="py-3 px-6 border-b text-left">Action</th>
+              </tr>
+            </thead>
+            <tbody className="text-lg">
+              {appointments.length === 0 && (
+                <tr>
+                  <td colSpan={5} className="text-center text-gray-500 py-8 text-xl">No appointments found.</td>
+                </tr>
+              )}
+              {appointments.map((appointment, idx) => {
+                const doctor = appointment.doctor;
+                return (
+                  <tr key={appointment.appointmentId} className="hover:bg-gray-50 transition">
+                    <td className="py-4 px-6 border-b">{idx + 1}</td>
+                    <td className="py-4 px-6 border-b flex items-center gap-3">
+                      <img src="/assets/doctor-img.png" alt="Doctor" className="w-10 h-10 rounded-full object-cover border-2 border-blue-200" />
+                      <span>Dr. {doctor && doctor.firstName ? doctor.firstName : 'Unknown'} {doctor && doctor.lastName ? doctor.lastName : ''}</span>
+                    </td>
+                    <td className="py-4 px-6 border-b">{new Date(appointment.appointmentDate).toLocaleString()}</td>
+                    <td className="py-4 px-6 border-b">
+                      <span className={`font-semibold ${appointment.status === 'Cancelled' ? 'text-red-500' : 'text-green-600'}`}>{appointment.status}</span>
+                    </td>
+                    <td className="py-4 px-6 border-b">
+                      {appointment.status !== 'Cancelled' && appointment.status !== 'Completed' && (
+                        <Button
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600 shadow-md font-semibold transition"
+                          onClick={() => cancelAppointment(appointment.appointmentId)}
+                        >
+                          Cancel
+                        </Button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       </main>
     </div>

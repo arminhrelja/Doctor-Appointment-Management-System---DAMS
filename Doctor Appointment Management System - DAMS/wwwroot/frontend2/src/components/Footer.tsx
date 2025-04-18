@@ -18,27 +18,15 @@ function Footer() {
 
                     <ul className="mt-12 flex flex-wrap justify-center gap-6 md:gap-8 lg:gap-12">
                         <li>
-                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> About </a>
+                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> Home </a>
                         </li>
 
                         <li>
-                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> Careers </a>
+                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> All Doctors </a>
                         </li>
 
                         <li>
-                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> History </a>
-                        </li>
-
-                        <li>
-                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> Services </a>
-                        </li>
-
-                        <li>
-                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> Projects </a>
-                        </li>
-
-                        <li>
-                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> Blog </a>
+                            <a className="text-gray-700 transition hover:text-gray-700/75" href="#"> My Appointments </a>
                         </li>
                     </ul>
 

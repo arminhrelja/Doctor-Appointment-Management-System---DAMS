@@ -23,6 +23,23 @@ const DoctorAppointments: React.FC = () => {
     fetchAppointments();
   }, []);
 
+  const cancelAppointment = async (appointmentId: number) => {
+    try {
+      await fetch(`https://localhost:7036/api/Appointment/cancel/${appointmentId}`, {
+        method: 'POST',
+      });
+      setAppointments((prevAppointments) =>
+        prevAppointments.map((appointment) =>
+          appointment.appointmentId === appointmentId
+            ? { ...appointment, status: 'Cancelled' }
+            : appointment
+        )
+      );
+    } catch (error) {
+      console.error('Error cancelling appointment:', error);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen bg-gray-100">
       <Header />
@@ -38,19 +55,20 @@ const DoctorAppointments: React.FC = () => {
                   <th className="py-3 px-6 border-b text-left">Patient</th>
                   <th className="py-3 px-6 border-b text-left">Date & Time</th>
                   <th className="py-3 px-6 border-b text-left">Status</th>
+                  <th className="py-3 px-6 border-b text-left">Actions</th>
                 </tr>
               </thead>
               <tbody className="text-lg">
                 {appointments.length === 0 && (
                   <tr>
-                    <td colSpan={4} className="text-center text-gray-500 py-8 text-xl">No appointments found.</td>
+                    <td colSpan={5} className="text-center text-gray-500 py-8 text-xl">No appointments found.</td>
                   </tr>
                 )}
                 {appointments.map((appointment) => (
                   <tr key={appointment.appointmentId} className="hover:bg-gray-50 transition">
                     <td className="py-4 px-6 border-b">{appointment.appointmentId}</td>
                     <td className="py-4 px-6 border-b flex items-center gap-3">
-                      <img src="/assets/doctor-img.png" alt="Doctor" className="w-10 h-10 rounded-full object-cover border-2 border-blue-200" />
+                      <img src="/assets/patient-img.png" alt="Patient" className="w-10 h-10 rounded-full object-cover border-2 border-blue-200" />
                       <span>{appointment.patient.firstName} {appointment.patient.lastName}</span>
                     </td>
                     <td className="py-4 px-6 border-b">{new Date(appointment.appointmentDate).toLocaleString()}</td>
@@ -58,6 +76,16 @@ const DoctorAppointments: React.FC = () => {
                       <span className={`px-3 py-1 rounded-full text-lg font-semibold ${appointment.status === 'Cancelled' ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'}`}>
                         {appointment.status}
                       </span>
+                    </td>
+                    <td className="py-4 px-6 border-b">
+                      {appointment.status !== 'Cancelled' && appointment.status !== 'Completed' && (
+                        <button
+                          className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"
+                          onClick={() => cancelAppointment(appointment.appointmentId)}
+                        >
+                          Cancel
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}

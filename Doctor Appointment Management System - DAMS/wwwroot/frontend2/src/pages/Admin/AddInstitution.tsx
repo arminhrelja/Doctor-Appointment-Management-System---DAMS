@@ -93,7 +93,10 @@ const AddInstitution: React.FC = () => {
               </select>
             </div>
             <div className="col-span-2 flex">
-              <Button type="submit" className="bg-blue-700 text-white px-8 py-6 rounded-xl hover:bg-blue-800 text-xl cursor-pointer">
+              <Button
+                className="bg-blue-700 text-white px-8 py-6 rounded-xl hover:bg-blue-800 text-xl cursor-pointer shadow-md font-semibold transition"
+                type="submit"
+              >
                 Add Institution
               </Button>
             </div>

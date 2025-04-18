@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import Header from '../../components/Header';
 import { Button } from '@/components/ui/button';
 import { addDays, format } from 'date-fns';
+import { toast } from "sonner";
 
 const getNext7Days = () => {
   const days = [];
@@ -29,6 +30,13 @@ const getTimeSlots = () => {
 const DoctorDetails: React.FC = () => {
   const { doctorId } = useParams<{ doctorId: string }>();
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  // Redirect to login if not logged in
+  useEffect(() => {
+    if (!token) {
+      navigate("/login");
+    }
+  }, [token, navigate]);
   const [doctor, setDoctor] = useState<any>(null);
   const [selectedDate, setSelectedDate] = useState<string>(getNext7Days()[0].value);
   const [selectedTime, setSelectedTime] = useState<string>('');
@@ -54,7 +62,12 @@ const DoctorDetails: React.FC = () => {
         const response = await fetch(`https://localhost:7036/api/Appointment/list`);
         const data = await response.json();
         const slots = data
-          .filter((a: any) => a.doctorId === parseInt(doctorId || '0') && a.appointmentDate.startsWith(selectedDate))
+          .filter((a: any) =>
+            a.doctorId === parseInt(doctorId || '0') &&
+            a.appointmentDate.startsWith(selectedDate) &&
+            a.status !== 'Cancelled' &&
+            a.status !== 'Completed'
+          )
           .map((a: any) => format(new Date(a.appointmentDate), 'HH:mm'));
         setBookedSlots(slots);
       } catch (error) {
@@ -68,7 +81,7 @@ const DoctorDetails: React.FC = () => {
     try {
       const patientId = localStorage.getItem('userId');
       if (!selectedDate || !selectedTime) {
-        alert('Please select date and time.');
+        toast.error('Please select date and time.');
         return;
       }
       const response = await fetch('https://localhost:7036/api/Appointment/book', {
@@ -85,10 +98,10 @@ const DoctorDetails: React.FC = () => {
       });
 
       if (response.ok) {
-        alert('Appointment booked successfully!');
+        toast.success('Appointment booked successfully!');
         navigate('/patient/my-appointments');
       } else {
-        alert('Failed to book appointment.');
+        toast.error('Failed to book appointment.');
       }
     } catch (error) {
       console.error('Error booking appointment:', error);
@@ -149,7 +162,7 @@ const DoctorDetails: React.FC = () => {
             })}
           </div>
           <Button
-            className="bg-blue-700 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-800 transition"
+            className="bg-blue-700 text-white px-8 py-3 rounded-lg text-lg hover:bg-blue-800 transition shadow-md font-semibold"
             onClick={bookAppointment}
             disabled={!selectedDate || !selectedTime}
           >

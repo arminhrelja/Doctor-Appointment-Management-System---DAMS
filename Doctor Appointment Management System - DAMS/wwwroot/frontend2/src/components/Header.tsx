@@ -36,11 +36,14 @@ function Header() {
                             <nav aria-label="Global">
                                 <ul className="flex items-center gap-6 text-xl">
                                     <li>
-                                        <a className="text-gray-500 transition hover:text-gray-500/75" href="#"> About </a>
+                                        <Link className="text-gray-500 transition hover:text-gray-500/75" to="/"> Home </Link>
                                     </li>
 
                                     <li>
                                         <Link className="text-gray-500 transition hover:text-gray-500/75" to="/all-doctors"> All Doctors </Link>
+                                    </li>
+                                    <li>
+                                        <Link className="text-gray-500 transition hover:text-gray-500/75" to="/patient/my-appointments"> My Appointments </Link>
                                     </li>
                                 </ul>
                             </nav>
