@@ -27,14 +27,14 @@ function Header() {
                                 </svg>
                                 <p>DAMS</p>
                             </Link>
-                            <a className="flex gap-5 text-blue-700 text-3xl font-bold" href="#">
+                            <a className="flex text-blue-700 text-3xl font-bold" href="#">
                                 
                             </a>
                         </div>
 
                         <div className="hidden md:block">
                             <nav aria-label="Global">
-                                <ul className="flex items-center gap-6 text-xl">
+                                <ul className="flex items-center gap-4 text-lg">
                                     <li>
                                         <Link className="text-gray-500 transition hover:text-gray-500/75" to="/"> Home </Link>
                                     </li>
@@ -48,12 +48,18 @@ function Header() {
                                     <li>
                                         <Link className="text-gray-500 transition hover:text-gray-500/75" to="/patient/medical-records"> My Medical Records </Link>
                                     </li>
+                                    <li>
+                                        <Link className="text-gray-500 transition hover:text-gray-500/75" to="/ai/department-recommendation">AI Specialist</Link>
+                                    </li>
+                                    <li>
+                                        <Link className="text-gray-500 transition hover:text-gray-500/75" to="/ai/risk-prediction">AI Risk Prediction</Link>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>
 
                         <div className="flex items-center gap-4">
-                            <div className="sm:flex sm:gap-4">
+                            <div className="sm:flex sm:gap-1">
                                 {!isLoggedIn && (
                                     <>
                                         <Link className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm" to="/login">

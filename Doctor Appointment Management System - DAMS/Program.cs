@@ -1,3 +1,4 @@
+using Doctor_Appointment_Management_System___DAMS.MLModels;
 using Doctor_Appointment_Management_System___DAMS.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -44,6 +45,21 @@ builder.Services.AddCors(options =>
                         .AllowAnyMethod()
                         .AllowAnyHeader());
 });
+
+builder.Services.AddSingleton<Doctor_Appointment_Management_System___DAMS.Services.DepartmentPredictionService>();
+builder.Services.AddSingleton<Doctor_Appointment_Management_System___DAMS.Services.RiskPredictionService>();
+
+// Department classification model
+DepartmentClassificationModelBuilder.TrainAndSave(
+    "MLModels/department_data.csv",
+    "MLModels/department-classification-model.zip"
+);
+
+// Risk prediction model
+RiskPredictionModelBuilder.TrainAndSave(
+    "MLModels/risk_data.csv",
+    "MLModels/risk-prediction-model.zip"
+);
 
 var app = builder.Build();
 
