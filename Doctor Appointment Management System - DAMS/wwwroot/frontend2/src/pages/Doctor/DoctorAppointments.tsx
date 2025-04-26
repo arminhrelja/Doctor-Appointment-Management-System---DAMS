@@ -78,6 +78,12 @@ const DoctorAppointments: React.FC = () => {
                       </span>
                     </td>
                     <td className="py-4 px-6 border-b">
+                      <button
+                        className="bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-800 mr-2"
+                        onClick={() => window.location.href = `/doctor/medical-records/${appointment.patient.userId}`}
+                      >
+                        Medical Records
+                      </button>
                       {appointment.status !== 'Cancelled' && appointment.status !== 'Completed' && (
                         <button
                           className="bg-red-500 text-white px-4 py-2 rounded-lg hover:bg-red-600"

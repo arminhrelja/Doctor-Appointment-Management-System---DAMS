@@ -45,6 +45,9 @@ function Header() {
                                     <li>
                                         <Link className="text-gray-500 transition hover:text-gray-500/75" to="/patient/my-appointments"> My Appointments </Link>
                                     </li>
+                                    <li>
+                                        <Link className="text-gray-500 transition hover:text-gray-500/75" to="/patient/medical-records"> My Medical Records </Link>
+                                    </li>
                                 </ul>
                             </nav>
                         </div>

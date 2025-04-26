@@ -13,6 +13,8 @@ import AllDoctors from './AllDoctors';
 import DoctorDetails from './Patient/DoctorDetails';
 import AddInstitution from './Admin/AddInstitution';
 import MyAppointments from './Patient/MyAppointments';
+import DoctorMedicalRecords from './Doctor/DoctorMedicalRecords';
+import PatientMedicalRecords from './Patient/PatientMedicalRecords';
 
 function AppRouter() {
   return (
@@ -32,6 +34,8 @@ function AppRouter() {
         <Route path="/doctor-details/:doctorId" element={<DoctorDetails />} />
         <Route path="/admin/add-institution" element={<AddInstitution />} />
         <Route path="/patient/my-appointments" element={<MyAppointments />} />
+        <Route path="/doctor/medical-records/:patientId" element={<DoctorMedicalRecords />} />
+        <Route path="/patient/medical-records" element={<PatientMedicalRecords />} />
       </Routes>
     </Router>
   );

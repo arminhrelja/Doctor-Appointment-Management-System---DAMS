@@ -18,14 +18,16 @@ const MyAppointments: React.FC = () => {
   useEffect(() => {
     const fetchAppointments = async () => {
       try {
+        const userId = localStorage.getItem("userId");
         const response = await fetch('https://localhost:7036/api/Appointment/list');
         const data = await response.json();
-        setAppointments(data);
+        // Filtriraj samo termine za trenutno ulogovanog pacijenta
+        const filtered = data.filter((appt: any) => String(appt.patientId) === String(userId));
+        setAppointments(filtered);
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
     };
-
     fetchAppointments();
   }, []);
 
