@@ -16,6 +16,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             _context = context;
         }
 
+        //Action for adding a healthcare institution
         [HttpPost("add")]
         public IActionResult AddInstitution([FromBody] AddInstitutionDTO dto)
         {
@@ -36,6 +37,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(new { message = "Institution added successfully." });
         }
 
+        //Action for getting all healthcare institutions
         [HttpGet("list")]
         public IActionResult GetInstitutions()
         {
@@ -50,6 +52,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(institutions);
         }
 
+        //Action for getting a healthcare institution by type
         [HttpGet("types")]
         public IActionResult GetInstitutionTypes()
         {
@@ -57,6 +60,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(types);
         }
 
+        //Action for getting all departments in a healthcare institution
         [HttpGet("departments")]
         public IActionResult GetDepartments()
         {

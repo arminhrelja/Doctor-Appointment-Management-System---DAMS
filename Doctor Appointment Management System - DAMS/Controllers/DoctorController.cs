@@ -17,6 +17,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             _context = context;
         }
 
+        //Action for adding a doctor
         [HttpPost("add")]
         public IActionResult AddDoctor([FromBody] AddDoctorDTO dto)
         {
@@ -42,7 +43,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             _context.Users.Add(doctor);
             _context.SaveChanges();
 
-            // Dodaj vezu u UserInstitution (UserId, DepartmentId)
+            //Add a link to UserInstitution (UserId, DepartmentId)
             var userInstitution = new UserInstitution
             {
                 UserId = doctor.UserId,
@@ -54,6 +55,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(new { message = "Doctor added successfully." });
         }
 
+        //Action for getting all doctors
         [HttpGet("list")]
         public ActionResult<IEnumerable<object>> GetAllDoctors()
         {
@@ -84,6 +86,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             }
         }
 
+        //Action for getting a doctor by userId
         [HttpGet("{userId}")]
         public IActionResult GetDoctor(int userId)
         {
@@ -113,6 +116,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(dto);
         }
 
+        //Action for getting a doctor by departmentId
         [HttpGet("specialty/{specialty}")]
         public ActionResult<IEnumerable<DoctorDto>> GetDoctorsBySpecialty(string specialty)
         {
@@ -132,6 +136,8 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
 
             return Ok(doctors);
         }
+
+        //Action for updating a doctors profile
         [HttpPut("update/{id}")]
         public IActionResult UpdateDoctor(int id, [FromBody] UpdateDoctorDTO dto)
         {

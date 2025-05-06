@@ -17,6 +17,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             _context = context;
         }
 
+        //Action for booking an appointment
         [HttpPost("book")]
         public IActionResult BookAppointment([FromBody] BookAppointmentDTO dto)
         {
@@ -40,6 +41,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(new { message = "Appointment booked successfully." });
         }
 
+        //Action for cancelling an appointment
         [HttpPut("cancel/{id}")]
         public IActionResult CancelAppointment(int id)
         {
@@ -56,6 +58,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(new { message = "Appointment cancelled successfully." });
         }
 
+        //Action for updating appointment status
         [HttpPut("update-status/{id}")]
         public IActionResult UpdateAppointmentStatus(int id, [FromBody] JsonElement body)
         {
@@ -75,6 +78,7 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             return Ok(new { message = "Appointment status updated successfully." });
         }
 
+        //Action for getting all appointments
         [HttpGet("list")]
         public IActionResult GetAppointments()
         {

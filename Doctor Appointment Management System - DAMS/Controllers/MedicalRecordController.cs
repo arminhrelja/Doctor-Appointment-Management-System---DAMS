@@ -15,7 +15,7 @@ public class MedicalRecordController : ControllerBase
         _context = context;
     }
 
-    // GET: api/MedicalRecord/patient/{patientId}
+    //Action for getting all medical records for patient
     [HttpGet("patient/{patientId}")]
     public async Task<IActionResult> GetRecordsForPatient(int patientId)
     {
@@ -28,7 +28,7 @@ public class MedicalRecordController : ControllerBase
         return Ok(records.Select(MedicalRecordDTO.FromModel));
     }
 
-    // GET: api/MedicalRecord/doctor/{doctorId}/patient/{patientId}
+    //Action for getting all medical records for doctor
     [HttpGet("doctor/{doctorId}/patient/{patientId}")]
     public async Task<IActionResult> GetRecordsForDoctorAndPatient(int doctorId, int patientId)
     {
@@ -41,7 +41,7 @@ public class MedicalRecordController : ControllerBase
         return Ok(records.Select(MedicalRecordDTO.FromModel));
     }
 
-    // POST: api/MedicalRecord
+    //Action for creating a new medical record
     [HttpPost]
     public async Task<IActionResult> CreateMedicalRecord([FromBody] CreateMedicalRecordDTO dto)
     {
@@ -59,7 +59,7 @@ public class MedicalRecordController : ControllerBase
         return Ok(MedicalRecordDTO.FromModel(record));
     }
 
-    // PUT: api/MedicalRecord/{id}
+    //Action for updating a medical record
     [HttpPut("{id}")]
     public async Task<IActionResult> UpdateMedicalRecord(int id, [FromBody] UpdateMedicalRecordDTO dto)
     {
