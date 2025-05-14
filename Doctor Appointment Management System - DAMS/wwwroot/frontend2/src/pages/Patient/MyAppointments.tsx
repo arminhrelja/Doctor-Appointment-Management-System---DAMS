@@ -39,7 +39,7 @@ const MyAppointments: React.FC = () => {
 
       if (response.ok) {
         toast.success('Appointment cancelled successfully.');
-        setAppointments((prev) => prev.filter((appt) => appt.appointmentId !== id));
+        setAppointments((prev) => prev.map((appt) => appt.appointmentId === id ? { ...appt, status: 'Cancelled' } : appt));
       } else {
         toast.error('Failed to cancel appointment.');
       }

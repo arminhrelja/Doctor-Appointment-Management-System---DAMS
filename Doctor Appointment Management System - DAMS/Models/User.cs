@@ -31,6 +31,8 @@ public partial class User
 
     public decimal? Fee { get; set; }
 
+    public int? PrimaryRoleId { get; set; }
+
     public virtual ICollection<Appointment> AppointmentDoctors { get; set; } = new List<Appointment>();
 
     public virtual ICollection<Appointment> AppointmentPatients { get; set; } = new List<Appointment>();
@@ -43,7 +45,11 @@ public partial class User
 
     public virtual ICollection<Prescription> PrescriptionPatients { get; set; } = new List<Prescription>();
 
+    public virtual UserRole? PrimaryRole { get; set; }
+
     public virtual UserRole Role { get; set; } = null!;
 
     public virtual ICollection<UserInstitution> UserInstitutions { get; set; } = new List<UserInstitution>();
+
+    public virtual ICollection<UserRoleMapping> UserRoleMappings { get; set; } = new List<UserRoleMapping>();
 }

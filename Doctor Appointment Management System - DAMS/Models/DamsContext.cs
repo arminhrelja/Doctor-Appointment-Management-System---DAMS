@@ -37,6 +37,8 @@ public partial class DamsContext : DbContext
 
     public virtual DbSet<UserRole> UserRoles { get; set; }
 
+    public virtual DbSet<UserRoleMapping> UserRoleMappings { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=HP_DATORN\\SQLEXPRESS;Database=DAMS;Trusted_Connection=True;TrustServerCertificate=True;");
@@ -187,7 +189,11 @@ public partial class DamsContext : DbContext
             entity.Property(e => e.PhoneNumber).HasMaxLength(50);
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
 
-            entity.HasOne(d => d.Role).WithMany(p => p.Users)
+            entity.HasOne(d => d.PrimaryRole).WithMany(p => p.UserPrimaryRoles)
+                .HasForeignKey(d => d.PrimaryRoleId)
+                .HasConstraintName("FK_Users_UserRoles1");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UserRoles)
                 .HasForeignKey(d => d.RoleId)
                 .HasConstraintName("FK_Users_UserRoles");
         });
@@ -216,6 +222,20 @@ public partial class DamsContext : DbContext
 
             entity.Property(e => e.RoleId).HasColumnName("RoleID");
             entity.Property(e => e.RoleName).HasMaxLength(50);
+        });
+
+        modelBuilder.Entity<UserRoleMapping>(entity =>
+        {
+            entity.ToTable("UserRoleMapping");
+
+            entity.HasOne(d => d.Role).WithMany(p => p.UserRoleMappings)
+                .HasForeignKey(d => d.RoleId)
+                .HasConstraintName("FK_UserRoleMapping_UserRoles");
+
+            entity.HasOne(d => d.User).WithMany(p => p.UserRoleMappings)
+                .HasForeignKey(d => d.UserId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_UserRoleMapping_Users");
         });
 
         OnModelCreatingPartial(modelBuilder);

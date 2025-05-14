@@ -1,11 +1,50 @@
 import { Link, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 function Header() {
     const navigate = useNavigate();
     const token = localStorage.getItem("token");
-
     const isLoggedIn = !!token;
+    const [roles, setRoles] = useState<string[]>([]);
+    const [currentRole, setCurrentRole] = useState<string | null>(localStorage.getItem("role"));
 
+    useEffect(() => {
+        const fetchRoles = async () => {
+            if (!token) return;
+            const res = await fetch("https://localhost:7036/api/Role/available-roles", {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+            if (res.ok) {
+                const data = await res.json();
+                setRoles(data);
+                console.log("[DEBUG] roles from backend:", data);
+            } else {
+                console.log("[DEBUG] roles fetch failed", res.status);
+            }
+        };
+        fetchRoles();
+    }, [token]);
+
+    const handleRoleSwitch = async (role: string) => {
+        if (!token) return;
+        const res = await fetch("https://localhost:7036/api/Role/switch-role", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
+            body: JSON.stringify(role),
+        });
+        if (res.ok) {
+            setCurrentRole(role);
+            localStorage.setItem("role", role);
+            // Redirect user based on new role
+            if (role.toLowerCase() === "admin") {
+                navigate("/admin/dashboard");
+            } else if (role.toLowerCase() === "doctor" || role.toLowerCase() === "doktor") {
+                navigate("/doctor/dashboard");
+            } else {
+                navigate("/"); // Patient or any other role
+            }
+        }
+    };
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -27,12 +66,8 @@ function Header() {
                                 </svg>
                                 <p>DAMS</p>
                             </Link>
-                            <a className="flex text-blue-700 text-3xl font-bold" href="#">
-                                
-                            </a>
                         </div>
-
-                        <div className="hidden md:block">
+                        <div className="flex items-center gap-4">
                             <nav aria-label="Global">
                                 <ul className="flex items-center gap-4 text-lg">
                                     <li>
@@ -56,35 +91,39 @@ function Header() {
                                     </li>
                                 </ul>
                             </nav>
-                        </div>
-
-                        <div className="flex items-center gap-4">
-                            <div className="sm:flex sm:gap-1">
-                                {!isLoggedIn && (
+                            <div className="sm:flex sm:gap-1 items-center">
+                                {isLoggedIn && (
                                     <>
-                                        <Link className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm" to="/login">
-                                            Login
-                                        </Link>
-                                        <div className="hidden sm:flex">
-                                            <Link className="rounded-md bg-gray-100 px-5 py-2.5 text-lg font-medium text-blue-700" to="/register">
-                                                Register
-                                            </Link>
+                                        <div className="relative inline-block text-left ml-2">
+                                            <details className="group">
+                                                <summary className="flex items-center px-3 py-1 bg-gray-100 text-blue-700 rounded shadow-sm border border-gray-200 text-sm font-semibold hover:bg-blue-50 cursor-pointer select-none">
+                                                    {currentRole || 'No Role'}
+                                                    {roles.length > 1 && (
+                                                        <svg className="w-4 h-4 ml-1 transition-transform group-open:rotate-180" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
+                                                            <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
+                                                        </svg>
+                                                    )}
+                                                </summary>
+                                                {roles.length > 1 && (
+                                                    <div className="absolute right-0 z-10 mt-2 w-36 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 border border-gray-200">
+                                                        {roles.filter((role) => role !== currentRole).map((role) => (
+                                                            <button
+                                                                key={role}
+                                                                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-blue-100 hover:text-blue-700"
+                                                                onClick={() => handleRoleSwitch(role)}
+                                                            >
+                                                                Switch to {role}
+                                                            </button>
+                                                        ))}
+                                                    </div>
+                                                )}
+                                            </details>
                                         </div>
+                                        <button className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm cursor-pointer ml-2" onClick={handleLogout}>
+                                            Logout
+                                        </button>
                                     </>
                                 )}
-                                {isLoggedIn && (
-                                    <button className="rounded-md bg-blue-700 px-5 py-2.5 text-lg font-medium text-white shadow-sm cursor-pointer" onClick={handleLogout}>
-                                        Logout
-                                    </button>
-                                )}
-                            </div>
-
-                            <div className="block md:hidden">
-                                <button className="rounded-sm bg-gray-100 p-2 text-gray-600 transition hover:text-gray-600/75">
-                                    <svg xmlns="http://www.w3.org/2000/svg" className="size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                                        <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16M4 18h16" />
-                                    </svg>
-                                </button>
                             </div>
                         </div>
                     </div>

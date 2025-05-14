@@ -37,10 +37,25 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
                 Fee = dto.Fee,
                 About = dto.About,
                 RoleId = 2,
-                CreatedAt = DateTime.UtcNow
+                CreatedAt = DateTime.UtcNow,
+                PrimaryRoleId = 2
             };
 
             _context.Users.Add(doctor);
+            _context.SaveChanges();
+
+            // Add UserRoleMapping for Doctor role
+            var doctorRole = _context.UserRoles.FirstOrDefault(r => r.RoleName == "Doctor" || r.RoleName == "Doktor");
+            if (doctorRole != null)
+            {
+                _context.UserRoleMappings.Add(new UserRoleMapping { UserId = doctor.UserId, RoleId = doctorRole.RoleId });
+            }
+            // Always add UserRoleMapping for Patient role
+            var patientRole = _context.UserRoles.FirstOrDefault(r => r.RoleName == "Patient" || r.RoleName == "Pacijent");
+            if (patientRole != null && !_context.UserRoleMappings.Any(m => m.UserId == doctor.UserId && m.RoleId == patientRole.RoleId))
+            {
+                _context.UserRoleMappings.Add(new UserRoleMapping { UserId = doctor.UserId, RoleId = patientRole.RoleId });
+            }
             _context.SaveChanges();
 
             //Add a link to UserInstitution (UserId, DepartmentId)

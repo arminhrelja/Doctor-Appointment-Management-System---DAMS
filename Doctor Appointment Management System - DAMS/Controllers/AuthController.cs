@@ -37,6 +37,11 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
                     string.IsNullOrWhiteSpace(dto.Password))
                     return BadRequest(new { message = "All required fields must be filled." });
 
+                // Find default role (Patient)
+                var defaultRole = _context.UserRoles.FirstOrDefault(r => r.RoleName == "Pacijent" || r.RoleName == "Patient");
+                if (defaultRole == null)
+                    return StatusCode(500, new { message = "Default role 'Pacijent'/'Patient' not found in UserRole table." });
+
                 var user = new User
                 {
                     FirstName = dto.FirstName,
@@ -45,18 +50,22 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
                     Password = dto.Password,
                     PhoneNumber = string.IsNullOrWhiteSpace(dto.PhoneNumber) ? null : dto.PhoneNumber,
                     DateOfBirth = dto.DateOfBirth,
-                    RoleId = 1,
+                    PrimaryRoleId = defaultRole.RoleId,
                     CreatedAt = DateTime.UtcNow
                 };
-
                 _context.Users.Add(user);
+                _context.SaveChanges();
+
+                // Add mapping for primary role (Patient)
+                var mapping = new UserRoleMapping { UserId = user.UserId, RoleId = defaultRole.RoleId };
+                _context.UserRoleMappings.Add(mapping);
                 _context.SaveChanges();
 
                 return Ok(new { message = "Registration successful. Please log in." });
             }
             catch (Exception ex)
             {
-                return StatusCode(500, new { message = "Registration failed.", error = ex.Message });
+                return StatusCode(500, new { message = "Registration failed.", error = ex.Message, stack = ex.StackTrace });
             }
         }
 
@@ -71,7 +80,13 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
                 return Unauthorized(new { message = "Invalid email or password" });
             }
 
-            var role = _context.UserRoles.FirstOrDefault(r => r.RoleId == user.RoleId);
+            if (user.PrimaryRoleId == null)
+            {
+                return Unauthorized(new { message = "User does not have a primary role assigned. Please contact administrator." });
+            }
+
+            // Get primary role
+            var role = _context.UserRoles.FirstOrDefault(r => r.RoleId == user.PrimaryRoleId);
 
             if (role == null)
             {
@@ -79,11 +94,6 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             }
 
             var token = GenerateJwtToken(user, role.RoleName);
-
-            if (user.RoleId == 1) // Redirect patients to the home page
-            {
-                return Ok(new { Token = token, Role = role.RoleName, UserId = user.UserId, RedirectUrl = "/" });
-            }
 
             return Ok(new { Token = token, Role = role.RoleName, UserId = user.UserId });
         }
@@ -99,9 +109,10 @@ namespace Doctor_Appointment_Management_System___DAMS.Controllers
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
             var claims = new[]
             {
-            new Claim(ClaimTypes.Name, user.Email),
-            new Claim(ClaimTypes.Role, role)
-        };
+                new Claim(ClaimTypes.Name, user.Email),
+                new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.NameIdentifier, user.UserId.ToString())
+            };
             var token = new JwtSecurityToken(
             issuer: _configuration["Jwt:Issuer"],
             audience: _configuration["Jwt:Audience"],

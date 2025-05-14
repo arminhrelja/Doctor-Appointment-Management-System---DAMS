@@ -9,5 +9,9 @@ public partial class UserRole
 
     public string RoleName { get; set; } = null!;
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<User> UserPrimaryRoles { get; set; } = new List<User>();
+
+    public virtual ICollection<UserRoleMapping> UserRoleMappings { get; set; } = new List<UserRoleMapping>();
+
+    public virtual ICollection<User> UserRoles { get; set; } = new List<User>();
 }
